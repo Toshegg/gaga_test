@@ -15,10 +15,8 @@
 #= require modules
 
 #= require_tree ./services
-#= require_tree ./constants
 #= require_tree ./controllers
 #= require_tree ./templates
-#= require_tree ./directives
 
 config = ($httpProvider, $stateProvider, $urlRouterProvider) ->
 
