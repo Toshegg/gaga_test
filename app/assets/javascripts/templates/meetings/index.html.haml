@@ -1,0 +1,58 @@
+.btn-filter-container
+  %button.btn.btn-default.btn-filter.pull-right{:type => "button", 'ng-click' => 'switch_show_filters()'}
+    %span.glyphicon.glyphicon-filter{"aria-hidden" => "true"}
+    Фильтр
+
+.filter-container{'ng-show' => 'show_filters'}
+  %select.form-control{:name => "filterSelect", 'ng-model' => 'filters', 'ng-options' => "filter.value as filter.name for filter in filters_list"}
+    %option{:value => ""} Выберите свой фильтр
+  .row
+    .col-sm-2
+      %label Имя
+      %input.form-control{type: 'text', placeholder: 'Имя', 'ng-model' => 'filters.name'}
+    .col-sm-2
+      %label Игры
+      %select.form-control{:name => "gamesSelect", "ng-model" => "selected_game.id"}
+        %option{"ng-repeat" => "game in games", :value => "{{game.id}}"} {{game.name}}
+    .col-sm-2
+      %label Час
+      %input.form-control{type: 'text', placeholder: 'От', 'ng-model' => 'filters.hour_from'}
+      %input.form-control{type: 'text', placeholder: 'До', 'ng-model' => 'filters.hour_to'}
+    .col-sm-2
+      %label День недели
+      %select.form-control{:name => "weekdaysSelect", "ng-model" => "filters.weekday"}
+        %option{"ng-repeat" => "weekday in weekdays", :value => "{{weekday.number}}"} {{weekday.name}}
+    .col-sm-2
+      %label Моя позиция
+      %input.form-control{type: 'text', placeholder: 'Широта', 'ng-model' => 'filters.lat'}
+      %input.form-control{type: 'text', placeholder: 'Долгота', 'ng-model' => 'filters.lng'}
+      %label Расстояние
+      %input.form-control{type: 'text', placeholder: 'Расстояние(км)', 'ng-model' => 'filters.distance'}
+
+  .row
+    .col-sm-3
+      %input.form-control{type: 'text', placeholder: 'Название фильтра', 'ng-model' => 'new_filter.name'}
+    .col-sm-3
+      %button.btn.btn-success{type: 'button', 'ng-click' => 'save_filter()'}
+        Сохранить фильтр
+
+%table.table.table-bordered
+  %thead
+    %th #
+    %th Название
+    %th Начало в
+    %th Конец в
+    %th Местоположение
+    %th Игры
+  %tbody
+    %tr{'ng-repeat' => 'meeting in meetings track by $index'}
+      %td {{$index + 1}} 
+      %td {{meeting.name}}
+      %td {{meeting.starts_at | date : 'dd.MM.yyyy в HH:mm' : 'UTC' }}
+      %td{'ng-if' => 'meeting.ends_at'} {{meeting.ends_at | date : 'dd.MM.yyyy в HH:mm' : 'UTC' }}
+      %td{'ng-if' => '!meeting.ends_at'} Не назначено
+      %td {{ "(" + meeting.location.lat + ", " + meeting.location.lng + ")" }}
+      %td
+        {{ games_to_string(meeting) }}
+-#%button.btn.btn-success.pull-right{type: 'button', 'ng-click' => 'new_meeting()'}
+-#  Добавить встречу
